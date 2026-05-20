@@ -26,10 +26,10 @@ static const char *game_names_pt[TOTAL] = {
     "13. Dig Dug", "14. Configuracoes"
 };
 static const char *paths_list[TOTAL] = {
-    "./snake", "./tetris", "./minesweeper", "./donkeykong",
-    "./pacman", "./paciencia", "./game2048", "./pong",
-    "./spaceinvaders", "./enduro", "./frogger", "./centipede",
-    "./digdug", ""
+    "snake", "tetris", "minesweeper", "donkeykong",
+    "pacman", "paciencia", "game2048", "pong",
+    "spaceinvaders", "enduro", "frogger", "centipede",
+    "digdug", ""
 };
 static const char *desc_en[TOTAL] = {
     "  Classic snake game - eat food and grow!",
@@ -87,6 +87,25 @@ static void draw_title(void) {
     for (int i = 0; i < h; i++)
         mvaddstr(y + i, (COLS - w) / 2, title[i]);
     mvaddstr(y + h, (COLS - (int)strlen(sub)) / 2, sub);
+}
+
+static void set_colors(void);
+static void launch_game(int idx) {
+    const char *name = paths[idx];
+    char cmd[256];
+    snprintf(cmd, sizeof cmd,
+        "test -x ./%s && exec ./%s 2>/dev/null || "
+        "exec shellgame-%s 2>/dev/null || exec %s",
+        name, name, name, name);
+    endwin();
+    system(cmd);
+    initscr();
+    cbreak();
+    noecho();
+    curs_set(0);
+    keypad(stdscr, TRUE);
+    start_color();
+    set_colors();
 }
 
 static void set_colors(void) {
@@ -241,19 +260,7 @@ int main(void) {
                 start_color();
                 set_colors();
             } else {
-                erase();
-                mvaddstr(LINES / 2, COLS / 2 - 10,
-                         _("Starting...", "Iniciando..."));
-                refresh();
-                endwin();
-                system(paths[sel]);
-                initscr();
-                cbreak();
-                noecho();
-                curs_set(0);
-                keypad(stdscr, TRUE);
-                start_color();
-                set_colors();
+                launch_game(sel);
             }
         }
     }
