@@ -1,0 +1,22 @@
+# Compiled binaries
+snake
+tetris
+minesweeper
+donkeykong
+pacman
+paciencia
+game2048
+pong
+spaceinvaders
+menu
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

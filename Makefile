@@ -1,0 +1,46 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -O2
+LDLIBS = -lncurses
+
+GAMES = snake tetris minesweeper donkeykong pacman paciencia game2048 pong spaceinvaders
+BINS = $(GAMES) menu
+
+.PHONY: all clean run
+
+all: $(BINS)
+
+menu: menu.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+snake: snake.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+tetris: tetris.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+minesweeper: minesweeper.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+donkeykong: donkeykong.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+pacman: pacman.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+paciencia: paciencia.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+game2048: game2048.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+pong: pong.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+spaceinvaders: spaceinvaders.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+clean:
+	rm -f $(BINS)
+
+run: all
+	./menu
