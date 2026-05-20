@@ -30,6 +30,7 @@
 | 10 | **Enduro** | Race through traffic on the open road. Survive 4 days |
 | 11 | **Frogger** | Cross a busy highway to reach home! |
 | 12 | **Centipede** | Shoot the creeping centipede through mushrooms |
+| 13 | **Dig Dug** | Dig tunnels and pump enemies until they pop |
 |   | **Settings** | Change language (EN/PT) and theme (Dark/Light/Retro) |
 
 ---
@@ -115,6 +116,7 @@ gcc -Wall -Wextra -O2 -o snake snake.c -lpdcurses
 | **Enduro** | ← → move lanes | — |
 | **Frogger** | WASD / Arrow keys | — |
 | **Centipede** | ← → move | **Space**: shoot |
+| **Dig Dug** | WASD / Arrow keys | **Space**: pump enemy |
 
 **Q** quits any game. **Enter** confirms in menus.
 
@@ -146,6 +148,7 @@ Select in the Settings menu (option 10).
 ├── snake.c            # Snake game
 ├── tetris.c           # Tetris
 ├── minesweeper.c      # Minesweeper
+├── digdug.c           # Dig Dug
 ├── donkeykong.c       # Donkey Kong
 ├── enduro.c           # Enduro
 ├── frogger.c          # Frogger

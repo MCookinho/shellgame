@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "config.h"
 
-#define TOTAL 13
+#define TOTAL 14
 
 static const char **games;
 static const char **paths;
@@ -16,17 +16,20 @@ static const char **desc;
 static const char *game_names_en[TOTAL] = {
     "1. Snake", "2. Tetris", "3. Minesweeper", "4. Donkey Kong",
     "5. Pac-Man", "6. Solitaire", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede", "13. Settings"
+    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede",
+    "13. Dig Dug", "14. Settings"
 };
 static const char *game_names_pt[TOTAL] = {
     "1. Snake", "2. Tetris", "3. Campo Minado", "4. Donkey Kong",
     "5. Pac-Man", "6. Paciencia", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede", "13. Configuracoes"
+    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede",
+    "13. Dig Dug", "14. Configuracoes"
 };
 static const char *paths_list[TOTAL] = {
     "./snake", "./tetris", "./minesweeper", "./donkeykong",
     "./pacman", "./paciencia", "./game2048", "./pong",
-    "./spaceinvaders", "./enduro", "./frogger", "./centipede", ""
+    "./spaceinvaders", "./enduro", "./frogger", "./centipede",
+    "./digdug", ""
 };
 static const char *desc_en[TOTAL] = {
     "  Classic snake game - eat food and grow!",
@@ -41,6 +44,7 @@ static const char *desc_en[TOTAL] = {
     "  Race through traffic across 4 days!",
     "  Cross the highway to reach home!",
     "  Shoot the creeping centipede!",
+    "  Dig tunnels and pump enemies!",
     "  Change language, theme and preferences"
 };
 static const char *desc_pt[TOTAL] = {
@@ -56,6 +60,7 @@ static const char *desc_pt[TOTAL] = {
     "  Corra pelo transito por 4 dias!",
     "  Atravesse a rodovia para chegar em casa!",
     "  Atire na centopeia rastejante!",
+    "  Cave tuneis e bombeie inimigos!",
     "  Alterar idioma, tema e preferencias"
 };
 
