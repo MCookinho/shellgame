@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -O2
 LDLIBS = -lncurses
 
-GAMES = snake tetris minesweeper donkeykong pacman paciencia game2048 pong spaceinvaders
+GAMES = snake tetris minesweeper donkeykong pacman paciencia game2048 pong spaceinvaders enduro
 BINS = $(GAMES) menu
 
 .PHONY: all clean run
@@ -37,6 +37,9 @@ pong: pong.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 spaceinvaders: spaceinvaders.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+enduro: enduro.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 clean:

@@ -27,6 +27,7 @@
 | 7 | **2048** | Slide and merge tiles to reach 2048 |
 | 8 | **Pong** | Table tennis for 1 or 2 players. CPU opponent in single-player |
 | 9 | **Space Invaders** | Defend Earth from alien invasions across 6 escalating levels |
+| 10 | **Enduro** | Race through traffic on the open road. Survive 4 days |
 |   | **Settings** | Change language (EN/PT) and theme (Dark/Light/Retro) |
 
 ---
@@ -109,6 +110,7 @@ gcc -Wall -Wextra -O2 -o snake snake.c -lpdcurses
 | **2048** | WASD / Arrow keys | — |
 | **Pong** | W/S (P1), ↑/↓ (P2) | **Space**: start |
 | **Space Invaders** | ← → move | **Space**: shoot |
+| **Enduro** | ← → move lanes | — |
 
 **Q** quits any game. **Enter** confirms in menus.
 
@@ -140,6 +142,7 @@ Select in the Settings menu (option 10).
 ├── tetris.c           # Tetris
 ├── minesweeper.c      # Minesweeper
 ├── donkeykong.c       # Donkey Kong
+├── enduro.c           # Enduro
 ├── pacman.c           # Pac-Man
 ├── paciencia.c        # Klondike Solitaire
 ├── game2048.c         # 2048
