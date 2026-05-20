@@ -94,9 +94,10 @@ static void launch_game(int idx) {
     const char *name = paths[idx];
     char cmd[256];
     snprintf(cmd, sizeof cmd,
-        "test -x ./%s && exec ./%s 2>/dev/null || "
-        "exec shellgame-%s 2>/dev/null || exec %s",
-        name, name, name, name);
+        "if [ -x ./%s ]; then ./%s; "
+        "elif command -v shellgame-%s >/dev/null 2>&1; then shellgame-%s; "
+        "else %s; fi",
+        name, name, name, name, name);
     endwin();
     system(cmd);
     initscr();
