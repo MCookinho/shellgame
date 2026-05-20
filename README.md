@@ -29,6 +29,7 @@
 | 9 | **Space Invaders** | Defend Earth from alien invasions across 6 escalating levels |
 | 10 | **Enduro** | Race through traffic on the open road. Survive 4 days |
 | 11 | **Frogger** | Cross a busy highway to reach home! |
+| 12 | **Centipede** | Shoot the creeping centipede through mushrooms |
 |   | **Settings** | Change language (EN/PT) and theme (Dark/Light/Retro) |
 
 ---
@@ -113,6 +114,7 @@ gcc -Wall -Wextra -O2 -o snake snake.c -lpdcurses
 | **Space Invaders** | ← → move | **Space**: shoot |
 | **Enduro** | ← → move lanes | — |
 | **Frogger** | WASD / Arrow keys | — |
+| **Centipede** | ← → move | **Space**: shoot |
 
 **Q** quits any game. **Enter** confirms in menus.
 
@@ -138,6 +140,7 @@ Select in the Settings menu (option 10).
 ## Project Structure
 
 ```
+├── centipede.c        # Centipede
 ├── config.h           # Shared configuration (lang, theme, colors)
 ├── menu.c             # Unified launcher menu
 ├── snake.c            # Snake game
