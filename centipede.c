@@ -82,6 +82,9 @@ static void move_centipedes(void) {
 
         // Check wall or mushroom collision
         if (nx <= 0 || nx >= W - 1 || has_mushroom(nx, ny)) {
+            if (nx <= 0) nx = 1;
+            else if (nx >= W - 1) nx = W - 2;
+            else nx = *hx;
             ny = *hy + 1;
             cents[c].dir *= -1;
             if (ny >= H - 1) {
@@ -167,7 +170,7 @@ static void move_bullets(void) {
     }
 }
 
-static void draw_centipede(void) {
+static void draw_centipede(int oy, int ox) {
     for (int c = 0; c < cent_count; c++) {
         if (cents[c].len <= 0) continue;
         for (int i = cents[c].len - 1; i >= 0; i--) {
@@ -175,12 +178,12 @@ static void draw_centipede(void) {
             if (y < 0 || y >= H) continue;
             if (i == 0) {
                 attron(COLOR_PAIR(3) | A_BOLD);
-                mvaddch(y, x, 'O');
+                mvaddch(oy + y, ox + x, 'O');
                 attroff(COLOR_PAIR(3) | A_BOLD);
             } else {
                 int color = (cents[c].len > 15) ? 5 : 3;
                 attron(COLOR_PAIR(color));
-                mvaddch(y, x, (i % 3 == 0) ? 'o' : '#');
+                mvaddch(oy + y, ox + x, (i % 3 == 0) ? 'o' : '#');
                 attroff(COLOR_PAIR(color));
             }
         }
@@ -260,7 +263,7 @@ int main(void) {
                 }
 
                 // Centipede
-                draw_centipede();
+                draw_centipede(oy, ox);
 
                 // Bullets
                 attron(COLOR_PAIR(2) | A_BOLD);
