@@ -1,13 +1,3 @@
-
-    .---. .----.
-   /  ___/ |    |
-   | (___  |    |
-   \___ \ |    |
-   ____) ||    |
-  '____/ '----'
-
-  ~~ Terminal Arcade Collection ~~
-
 # Shell Games
 
 **Shell Games** is a collection of classic arcade games that run directly in your terminal. Built with C and ncurses, it brings 9 retro games to your command line with zero bloat.
