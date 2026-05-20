@@ -1,6 +1,6 @@
 # Shell Games
 
-**Shell Games** is a collection of classic arcade games that run directly in your terminal. Built with C and ncurses, it brings 9 retro games to your command line with zero bloat.
+**Shell Games** is a collection of 25 classic and original arcade games that run directly in your terminal. Built with C and ncurses, with a unified menu, language support (EN/PT), and multiple themes.
 
 ---
 
@@ -8,19 +8,31 @@
 
 | # | Game | Description |
 |---|------|-------------|
-| 1 | **Snake** | Classic snake — eat food and grow without hitting yourself |
-| 2 | **Tetris** | Stack falling blocks and clear lines. Levels, score, next piece preview |
-| 3 | **Minesweeper** | Find all mines without exploding. Flag and reveal cells |
-| 4 | **Donkey Kong** | Climb platforms dodging barrels — a platformer in the terminal |
-| 5 | **Pac-Man** | Eat dots and avoid ghosts in the maze. Each ghost has unique AI |
-| 6 | **Solitaire** | Classic Klondike solitaire with drag-and-drop card movement |
-| 7 | **2048** | Slide and merge tiles to reach 2048 |
-| 8 | **Pong** | Table tennis for 1 or 2 players. CPU opponent in single-player |
-| 9 | **Space Invaders** | Defend Earth from alien invasions across 6 escalating levels |
-| 10 | **Enduro** | Race through traffic on the open road. Survive 4 days |
-| 11 | **Frogger** | Cross a busy highway to reach home! |
-| 12 | **Centipede** | Shoot the creeping centipede through mushrooms |
-| 13 | **Dig Dug** | Dig tunnels and pump enemies until they pop |
+| 1 | **2048** | Slide and merge tiles to reach 2048 |
+| 2 | **Asteroids** | Blast asteroids in deep space |
+| 3 | **Blackjack** | Beat the dealer in classic 21 |
+| 4 | **Breakout** | Break all the bricks with paddle and ball |
+| 5 | **Centipede** | Shoot the creeping centipede through mushrooms |
+| 6 | **Checkers** | Classic draughts for two players |
+| 7 | **Chess** | Classic chess for two players |
+| 8 | **Dig Dug** | Dig tunnels and pump enemies until they pop |
+| 9 | **Donkey Kong** | Climb platforms dodging barrels |
+| 10 | **Duck Hunt** | Aim and shoot ducks in this classic gallery |
+| 11 | **Enduro** | Race through traffic on the open road. Survive 4 days |
+| 12 | **Frogger** | Cross a busy highway to reach home |
+| 13 | **Galaga** | Classic arcade shooter — defeat alien waves |
+| 14 | **Hangman** | Guess the word before the man is hanged |
+| 15 | **Minesweeper** | Find all mines without exploding |
+| 16 | **Pac-Man** | Eat dots and avoid ghosts in the maze |
+| 17 | **Pong** | Table tennis for 1 or 2 players |
+| 18 | **Q\*Bert** | Hop on cubes to change their color |
+| 19 | **Rhythm Spire** | 4-lane rhythm game — feel the beat |
+| 20 | **Snake** | Classic snake — eat food and grow |
+| 21 | **Solitaire** | Classic Klondike solitaire card game |
+| 22 | **Spire Ascent** | A deck-building roguelike — climb the Spire |
+| 23 | **Super Auto Pets** | Auto-battler — collect pets and fight |
+| 24 | **Tetris** | Stack falling blocks to clear lines |
+| 25 | **The Typer** | Type words to survive the zombie apocalypse |
 |   | **Settings** | Change language (EN/PT) and theme (Dark/Light/Retro) |
 
 ---
@@ -65,8 +77,8 @@ pacman -S mingw-w64-x86_64-ncurses mingw-w64-x86_64-gcc
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/shell-games.git
-cd shell-games
+git clone https://github.com/MCookinho/shellgame.git
+cd shellgame
 
 # Build everything
 make
@@ -77,15 +89,17 @@ make run
 # Or launch a game directly
 ./snake
 ./tetris
-./pacman
 ```
 
-### Windows with PDCurses
-
-If using native Windows (no WSL), compile with PDCurses:
-
+### Install system-wide
 ```bash
-gcc -Wall -Wextra -O2 -o snake snake.c -lpdcurses
+sudo make install
+```
+Then launch with `shellgame` or `shellgame-<game>`.
+
+### AUR (Arch Linux)
+```bash
+yay -S shellgame
 ```
 
 ---
@@ -94,19 +108,31 @@ gcc -Wall -Wextra -O2 -o snake snake.c -lpdcurses
 
 | Game | Movement | Action |
 |------|----------|--------|
-| **Snake** | WASD / Arrow keys | — |
-| **Tetris** | ← → move, ↑ rotate, ↓ soft drop | **Space**: hard drop |
-| **Minesweeper** | Arrow keys to move cursor | **Enter**: reveal, **F**: flag |
-| **Donkey Kong** | WASD / Arrow keys | **Space**: jump |
-| **Pac-Man** | WASD / Arrow keys | — |
-| **Solitaire** | Arrow keys + **Space** to pick/place | — |
 | **2048** | WASD / Arrow keys | — |
-| **Pong** | W/S (P1), ↑/↓ (P2) | **Space**: start |
-| **Space Invaders** | ← → move | **Space**: shoot |
+| **Asteroids** | WASD / Arrow keys | **Space**: shoot |
+| **Blackjack** | Arrow keys to navigate | **Enter**: confirm |
+| **Breakout** | ← → / A D move paddle | — |
+| **Centipede** | ← → move | **Space**: shoot |
+| **Checkers** | Arrow keys + **Enter** to select/move | — |
+| **Chess** | Arrow keys + **Enter** to select/move | — |
+| **Dig Dug** | WASD / Arrow keys | **Space**: pump enemy |
+| **Donkey Kong** | WASD / Arrow keys | **Space**: jump |
+| **Duck Hunt** | Arrow keys aim | **Space**: shoot |
 | **Enduro** | ← → move lanes | — |
 | **Frogger** | WASD / Arrow keys | — |
-| **Centipede** | ← → move | **Space**: shoot |
-| **Dig Dug** | WASD / Arrow keys | **Space**: pump enemy |
+| **Galaga** | ← → move | **Space**: shoot |
+| **Hangman** | Type letters | — |
+| **Minesweeper** | Arrow keys move cursor | **Enter**: reveal, **F**: flag |
+| **Pac-Man** | WASD / Arrow keys | — |
+| **Pong** | W/S (P1), ↑/↓ (P2) | **Space**: start |
+| **Q\*Bert** | WASD / Arrow keys (diagonal) | — |
+| **Rhythm Spire** | D F J K keys | — |
+| **Snake** | WASD / Arrow keys | — |
+| **Solitaire** | Arrow keys + **Space** to pick/place | — |
+| **Spire Ascent** | 1-9: play card | **Enter/Space**: end turn |
+| **Super Auto Pets** | Arrow keys navigate | **Enter**: confirm |
+| **Tetris** | ← → move, ↑ rotate, ↓ soft drop | **Space**: hard drop |
+| **The Typer** | Type the word on the zombie | — |
 
 **Q** quits any game. **Enter** confirms in menus.
 
@@ -120,8 +146,6 @@ Settings are persisted to `~/.config/shellgames/config`.
 - **English** (default)
 - **Português**
 
-Select in the Settings menu (option 10).
-
 ### Themes
 - **Dark** — classic terminal look (default)
 - **Light** — white background for bright terminals
@@ -132,26 +156,40 @@ Select in the Settings menu (option 10).
 ## Project Structure
 
 ```
-├── centipede.c        # Centipede
-├── config.h           # Shared configuration (lang, theme, colors)
 ├── menu.c             # Unified launcher menu
-├── snake.c            # Snake game
-├── tetris.c           # Tetris
-├── minesweeper.c      # Minesweeper
+├── config.h           # Shared configuration (lang, theme, colors)
+├── game2048.c         # 2048
+├── asteroids.c        # Asteroids
+├── blackjack.c        # Blackjack
+├── breakout.c         # Breakout
+├── centipede.c        # Centipede
+├── checkers.c         # Checkers
+├── chess.c            # Chess
 ├── digdug.c           # Dig Dug
 ├── donkeykong.c       # Donkey Kong
+├── duckhunt.c         # Duck Hunt
 ├── enduro.c           # Enduro
 ├── frogger.c          # Frogger
+├── galaga.c           # Galaga
+├── hangman.c          # Hangman
+├── minesweeper.c      # Minesweeper
 ├── pacman.c           # Pac-Man
-├── paciencia.c        # Klondike Solitaire
-├── game2048.c         # 2048
 ├── pong.c             # Pong
-├── spaceinvaders.c    # Space Invaders (6 levels)
+├── qbert.c            # Q*Bert
+├── rhythm.c           # Rhythm Spire
+├── snake.c            # Snake
+├── paciencia.c        # Klondike Solitaire
+├── spire.c            # Spire Ascent
+├── superautopets.c    # Super Auto Pets
+├── tetris.c           # Tetris
+├── typer.c            # The Typer
 ├── Makefile           # Build system
 └── README.md          # This file
 ```
 
 Each game is a standalone binary. The menu launches via `system()`.
+
+All games compile with zero warnings at `-Wall -Wextra -O2`.
 
 ---
 
@@ -160,8 +198,6 @@ Each game is a standalone binary. The menu launches via `system()`.
 ```bash
 gcc -Wall -Wextra -O2 -lncurses -o menu menu.c
 ```
-
-All games compile with zero warnings at `-Wall -Wextra -O2`.
 
 ---
 
