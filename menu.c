@@ -8,59 +8,95 @@
 #include <unistd.h>
 #include "config.h"
 
-#define TOTAL 14
+#define TOTAL 26
 
 static const char **games;
 static const char **paths;
 static const char **desc;
 static const char *game_names_en[TOTAL] = {
-    "1. Snake", "2. Tetris", "3. Minesweeper", "4. Donkey Kong",
-    "5. Pac-Man", "6. Solitaire", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede",
-    "13. Dig Dug", "14. Settings"
+    "1. 2048", "2. Asteroids", "3. Blackjack", "4. Breakout",
+    "5. Centipede", "6. Checkers", "7. Chess", "8. Dig Dug",
+    "9. Donkey Kong", "10. Duck Hunt", "11. Enduro",
+    "12. Frogger", "13. Galaga", "14. Hangman",
+    "15. Minesweeper", "16. Pac-Man", "17. Pong",
+    "18. Q*Bert", "19. Rhythm Spire", "20. Snake",
+    "21. Solitaire", "22. Spire Ascent", "23. Super Auto Pets",
+    "24. Tetris", "25. The Typer", "26. Settings"
 };
 static const char *game_names_pt[TOTAL] = {
-    "1. Snake", "2. Tetris", "3. Campo Minado", "4. Donkey Kong",
-    "5. Pac-Man", "6. Paciencia", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Centipede",
-    "13. Dig Dug", "14. Configuracoes"
+    "1. 2048", "2. Asteroides", "3. Blackjack", "4. Breakout",
+    "5. Centipede", "6. Damas", "7. Xadrez", "8. Dig Dug",
+    "9. Donkey Kong", "10. Duck Hunt", "11. Enduro",
+    "12. Frogger", "13. Galaga", "14. Jogo da Forca",
+    "15. Campo Minado", "16. Pac-Man", "17. Pong",
+    "18. Q*Bert", "19. Ritmo na Spire", "20. Snake",
+    "21. Paciencia", "22. Spire Ascent", "23. Super Auto Pets",
+    "24. Tetris", "25. The Typer", "26. Configuracoes"
 };
 static const char *paths_list[TOTAL] = {
-    "snake", "tetris", "minesweeper", "donkeykong",
-    "pacman", "paciencia", "game2048", "pong",
-    "spaceinvaders", "enduro", "frogger", "centipede",
-    "digdug", ""
+    "game2048", "asteroids", "blackjack", "breakout",
+    "centipede", "checkers", "chess", "digdug",
+    "donkeykong", "duckhunt", "enduro",
+    "frogger", "galaga", "hangman",
+    "minesweeper", "pacman", "pong",
+    "qbert", "rhythm", "snake",
+    "paciencia", "spire", "superautopets",
+    "tetris", "typer", ""
 };
 static const char *desc_en[TOTAL] = {
-    "  Classic snake game - eat food and grow!",
-    "  Stack falling blocks to clear lines",
-    "  Find all mines without exploding",
-    "  Climb platforms dodging barrels",
-    "  Eat dots and avoid ghosts in the maze",
-    "  Classic Klondike solitaire card game",
     "  Slide and merge tiles to reach 2048!",
-    "  Classic table tennis - 1 or 2 players!",
-    "  Defend Earth from the alien invasion!",
+    "  Blast asteroids in deep space!",
+    "  Beat the dealer in classic 21!",
+    "  Break all the bricks with paddle and ball!",
+    "  Shoot the creeping centipede!",
+    "  Classic draughts for two players",
+    "  Classic chess for two players",
+    "  Dig tunnels and pump enemies!",
+    "  Climb platforms dodging barrels",
+    "  Aim and shoot ducks in this classic gallery!",
     "  Race through traffic across 4 days!",
     "  Cross the highway to reach home!",
-    "  Shoot the creeping centipede!",
-    "  Dig tunnels and pump enemies!",
+    "  Classic arcade shooter - defeat alien waves!",
+    "  Guess the word before the man is hanged!",
+    "  Find all mines without exploding",
+    "  Eat dots and avoid ghosts in the maze",
+    "  Classic table tennis - 1 or 2 players!",
+    "  Hop on cubes to change their color!",
+    "  4-lane rhythm game - feel the beat!",
+    "  Classic snake game - eat food and grow!",
+    "  Classic Klondike solitaire card game",
+    "  A deck-building roguelike - climb the Spire!",
+    "  Auto-battler - collect pets and fight!",
+    "  Stack falling blocks to clear lines",
+    "  Type words to survive the zombie apocalypse!",
     "  Change language, theme and preferences"
 };
 static const char *desc_pt[TOTAL] = {
-    "  Snake classico - coma e cresca!",
-    "  Empilhe blocos e limpe linhas",
-    "  Encontre todas as minas sem explodir",
-    "  Suba plataformas desviando de barris",
-    "  Coma pontos e evite fantasmas no labirinto",
-    "  Paciencia clasico com cartas",
     "  Deslize e junte pecas ate 2048!",
-    "  Tenis de mesa classico - 1 ou 2 jogadores!",
-    "  Defenda a Terra da invasao alienigena!",
+    "  Exploda asteroides no espaco!",
+    "  Venca a mesa no classico 21!",
+    "  Quebre todos os tijolos com a raquete!",
+    "  Atire na centopeia rastejante!",
+    "  Damas classico para dois jogadores",
+    "  Xadrez classico para dois jogadores",
+    "  Cave tuneis e bombeie inimigos!",
+    "  Suba plataformas desviando de barris",
+    "  Mire e atire nos patos neste classico galeria!",
     "  Corra pelo transito por 4 dias!",
     "  Atravesse a rodovia para chegar em casa!",
-    "  Atire na centopeia rastejante!",
-    "  Cave tuneis e bombeie inimigos!",
+    "  Tiro ao alien classico - derrote as ondas!",
+    "  Adivinhe a palavra antes de ser enforcado!",
+    "  Encontre todas as minas sem explodir",
+    "  Coma pontos e evite fantasmas no labirinto",
+    "  Tenis de mesa classico - 1 ou 2 jogadores!",
+    "  Pule nos cubos para mudar a cor!",
+    "  Jogo de ritmo 4-pistas - sinta o beat!",
+    "  Snake classico - coma e cresca!",
+    "  Paciencia clasico com cartas",
+    "  Roguelike de cartas - conquiste a Spire!",
+    "  Auto-batalha - colete pets e lute!",
+    "  Empilhe blocos e limpe linhas",
+    "  Digite palavras para sobreviver ao apocalipse zumbi!",
     "  Alterar idioma, tema e preferencias"
 };
 
