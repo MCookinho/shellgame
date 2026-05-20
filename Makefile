@@ -56,3 +56,12 @@ clean:
 
 run: all
 	./menu
+
+.PHONY: install
+PREFIX = /usr
+INSTALL_DIR = $(DESTDIR)$(PREFIX)/bin
+
+install: all
+	install -d $(INSTALL_DIR)
+	install -m 755 menu $(INSTALL_DIR)/shellgame
+	for game in $(GAMES); do install -m 755 $$game $(INSTALL_DIR)/shellgame-$$game; done
