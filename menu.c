@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "config.h"
 
-#define TOTAL 11
+#define TOTAL 12
 
 static const char **games;
 static const char **paths;
@@ -16,17 +16,17 @@ static const char **desc;
 static const char *game_names_en[TOTAL] = {
     "1. Snake", "2. Tetris", "3. Minesweeper", "4. Donkey Kong",
     "5. Pac-Man", "6. Solitaire", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Settings"
+    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Settings"
 };
 static const char *game_names_pt[TOTAL] = {
     "1. Snake", "2. Tetris", "3. Campo Minado", "4. Donkey Kong",
     "5. Pac-Man", "6. Paciencia", "7. 2048", "8. Pong",
-    "9. Space Invaders", "10. Enduro", "11. Configuracoes"
+    "9. Space Invaders", "10. Enduro", "11. Frogger", "12. Configuracoes"
 };
 static const char *paths_list[TOTAL] = {
     "./snake", "./tetris", "./minesweeper", "./donkeykong",
     "./pacman", "./paciencia", "./game2048", "./pong",
-    "./spaceinvaders", "./enduro", ""
+    "./spaceinvaders", "./enduro", "./frogger", ""
 };
 static const char *desc_en[TOTAL] = {
     "  Classic snake game - eat food and grow!",
@@ -39,6 +39,7 @@ static const char *desc_en[TOTAL] = {
     "  Classic table tennis - 1 or 2 players!",
     "  Defend Earth from the alien invasion!",
     "  Race through traffic across 4 days!",
+    "  Cross the highway to reach home!",
     "  Change language, theme and preferences"
 };
 static const char *desc_pt[TOTAL] = {
@@ -52,6 +53,7 @@ static const char *desc_pt[TOTAL] = {
     "  Tenis de mesa classico - 1 ou 2 jogadores!",
     "  Defenda a Terra da invasao alienigena!",
     "  Corra pelo transito por 4 dias!",
+    "  Atravesse a rodovia para chegar em casa!",
     "  Alterar idioma, tema e preferencias"
 };
 
