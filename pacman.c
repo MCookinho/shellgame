@@ -17,7 +17,7 @@
 static int map[R][C];
 static int dots_total, dots_eaten;
 
-typedef struct { int y, x, dy, dx, fright; } Ghost;
+typedef struct { int y, x, dy, dx, fright, in_house; } Ghost;
 
 static Ghost ghosts[MAX_GHOSTS];
 static int py, px, pdy, pdx, dead, won, frame, lives, scared;
@@ -64,7 +64,7 @@ static void init_game(void) {
     int gx[] = {14, 13, 14, 13};
     int gy[] = {10, 10, 11, 11};
     for (int i = 0; i < MAX_GHOSTS; i++)
-        ghosts[i] = (Ghost){ gy[i], gx[i], -1, 0, 0 };
+        ghosts[i] = (Ghost){ gy[i], gx[i], 0, 0, 0, i > 0 };
 }
 
 static int is_walkable(int y, int x) {
@@ -84,31 +84,36 @@ static void move_pacman(void) {
     if (map[py][px] == 3) {
         map[py][px] = 0; dots_eaten++;
         scared = FRIGHT_TIME;
-        for (int i = 0; i < MAX_GHOSTS; i++) ghosts[i].fright = FRIGHT_TIME;
+        for (int i = 0; i < MAX_GHOSTS; i++) {
+            ghosts[i].fright = FRIGHT_TIME;
+            ghosts[i].dy = -ghosts[i].dy;
+            ghosts[i].dx = -ghosts[i].dx;
+        }
     }
     if (dots_eaten >= dots_total) won = 1;
 }
 
 static void target_for_ghost(int i, int *ty, int *tx) {
     switch (i) {
-        case 0:
+        case 0: // Blinky: targets Pac-Man directly
             *ty = py; *tx = px;
             break;
-        case 1:
+        case 1: // Pinky: targets 4 tiles ahead of Pac-Man
             *ty = py + 4 * pdy;
             *tx = px + 4 * pdx;
-            if (pdy == -1) *tx = px - 4;
+            if (pdy == -1) *tx = px - 4; // original bug: facing up adds -4 to x
             break;
-        case 2: {
+        case 2: { // Inky: vector from Blinky to 2 ahead, doubled
             int ahead_y = py + 2 * pdy;
             int ahead_x = px + 2 * pdx;
             *ty = 2 * ahead_y - ghosts[0].y;
             *tx = 2 * ahead_x - ghosts[0].x;
             break;
         }
-        case 3: {
-            int dist = abs(ghosts[i].y - py) + abs(ghosts[i].x - px);
-            if (dist > 8) { *ty = py; *tx = px; }
+        case 3: { // Clyde: chase when far, scatter when close
+            int dy = py - ghosts[i].y, dx = px - ghosts[i].x;
+            int dist = dy * dy + dx * dx;
+            if (dist > 64) { *ty = py; *tx = px; }
             else { *ty = 20; *tx = 2; }
             break;
         }
@@ -116,47 +121,76 @@ static void target_for_ghost(int i, int *ty, int *tx) {
 }
 
 static void move_ghost_to_target(Ghost *g, int ty, int tx) {
-    int best = 9999, bd = 0, flee = g->fright > 0;
     int dys[] = {-1, 1, 0, 0}, dxs[] = {0, 0, -1, 1};
-    int order[] = {0, 1, 2, 3};
-    for (int a = 3; a > 0; a--) {
-        int b = rand() % (a + 1);
-        int t = order[a]; order[a] = order[b]; order[b] = t;
+    int porder[] = {0, 3, 1, 2}; // UP, RIGHT, DOWN, LEFT (tiebreak priority)
+    int best = 9999, best_dir = -1;
+
+    if (g->fright > 0) {
+        // Frightened: random direction at each opportunity
+        int valid[4], vc = 0;
+        for (int d = 0; d < 4; d++) {
+            if (dys[d] == -g->dy && dxs[d] == -g->dx) continue;
+            int ny = g->y + dys[d], nx = g->x + dxs[d];
+            if (nx < 0) nx = C - 1;
+            if (nx >= C) nx = 0;
+            if (ny < 0 || ny >= R || !is_walkable(ny, nx)) continue;
+            valid[vc++] = d;
+        }
+        if (vc > 0) {
+            int d = valid[rand() % vc];
+            g->dy = dys[d]; g->dx = dxs[d];
+        }
+        return;
     }
-    for (int d = 0; d < 4; d++) {
-        int od = order[d];
-        int ny = g->y + dys[od], nx = g->x + dxs[od];
+
+    for (int p = 0; p < 4; p++) {
+        int d = porder[p];
+        int ny = g->y + dys[d], nx = g->x + dxs[d];
         if (nx < 0) nx = C - 1;
         if (nx >= C) nx = 0;
         if (ny < 0 || ny >= R || !is_walkable(ny, nx)) continue;
-        if (!flee && dys[od] == -g->dy && dxs[od] == -g->dx) continue;
-        int dist = abs(ny - ty) + abs(nx - tx);
-        if (flee) { if (dist > best) { best = dist; bd = od; } }
-        else { if (dist < best) { best = dist; bd = od; } }
+        if (dys[d] == -g->dy && dxs[d] == -g->dx) continue;
+        int dist = (ny - ty) * (ny - ty) + (nx - tx) * (nx - tx);
+        if (dist < best) { best = dist; best_dir = d; }
     }
-    if (best < 9999) { g->dy = dys[bd]; g->dx = dxs[bd]; }
+    if (best_dir >= 0) { g->dy = dys[best_dir]; g->dx = dxs[best_dir]; }
 }
 
-static int scatter_mode = 0, scatter_timer = 0;
-static int scatter_targets[4][2] = {{1, 25}, {1, 2}, {19, 25}, {19, 2}};
+static int scatter_mode = 0, phase_idx = 0, phase_timer = 0;
+/* Scatter/chase phase durations (frames at 60fps) */
+static int phase_durations[][2] = {{420, 1200}, {420, 1200}, {300, 1200}, {1, 99999}};
+static int scatter_targets[4][2] = {{1, 26}, {1, 1}, {20, 27}, {20, 1}};
+static int release_counts[] = {0, 30, 60, 100};
 
 static void move_ghosts(void) {
-    // Cycle between scatter and chase every 240 frames
-    scatter_timer++;
-    if (scatter_timer > 240) { scatter_timer = 0; scatter_mode = !scatter_mode; }
+    phase_timer++;
+    if (phase_timer > phase_durations[phase_idx][scatter_mode]) {
+        phase_timer = 0;
+        scatter_mode = !scatter_mode;
+        if (scatter_mode == 0 && phase_idx < 3) phase_idx++;
+    }
 
     for (int i = 0; i < MAX_GHOSTS; i++) {
         Ghost *g = &ghosts[i];
-        int ty, tx;
+
+        if (g->in_house) {
+            if (dots_eaten >= release_counts[i]) {
+                g->in_house = 0;
+                g->dy = -1; g->dx = 0;
+                if (g->y > 9) { g->y--; }
+            } else {
+                g->y += (frame / 30) % 2 == 0 ? 1 : -1;
+                if (g->y < 10 || g->y > 11) g->dy = -g->dy;
+                continue;
+            }
+        }
 
         if (g->fright > 0) {
-            target_for_ghost(i, &ty, &tx);
-            move_ghost_to_target(g, ty, tx);
+            move_ghost_to_target(g, 0, 0);
         } else if (scatter_mode) {
-            ty = scatter_targets[i][0];
-            tx = scatter_targets[i][1];
-            move_ghost_to_target(g, ty, tx);
+            move_ghost_to_target(g, scatter_targets[i][0], scatter_targets[i][1]);
         } else {
+            int ty, tx;
             target_for_ghost(i, &ty, &tx);
             move_ghost_to_target(g, ty, tx);
         }
@@ -164,7 +198,6 @@ static void move_ghosts(void) {
         g->y += g->dy; g->x += g->dx;
         if (g->x < 0) g->x = C - 1;
         if (g->x >= C) g->x = 0;
-        // Safety: if ghost ended up in a wall, reset to ghost house
         if (g->y < 0 || g->y >= R || map[g->y][g->x] == 1) {
             g->y = 10; g->x = 14; g->dy = -1; g->dx = 0;
         }
@@ -212,7 +245,7 @@ int main(void) {
             if (ch == KEY_RIGHT || ch == 'd') { pdy =  0; pdx =  1; }
 
             if (frame % 3 == 0) move_pacman();
-            if (frame % 5 == 0) move_ghosts();
+            if (frame % 4 == 0) move_ghosts();
 
             for (int i = 0; i < MAX_GHOSTS; i++)
                 if (ghosts[i].y == py && ghosts[i].x == px) {
@@ -224,9 +257,11 @@ int main(void) {
                         lives--;
                         if (lives > 0) {
                             py = 16; px = 14; pdy = 0; pdx = -1;
-                            for (int j = 0; j < MAX_GHOSTS; j++)
-                                ghosts[j] = (Ghost){ 10, 14, 0, -1, 0 };
-                            ghosts[0].x = 12; ghosts[1].x = 16;
+                            for (int j = 0; j < MAX_GHOSTS; j++) {
+                                int gx[] = {14, 13, 14, 13};
+                                int gy[] = {10, 10, 11, 11};
+                                ghosts[j] = (Ghost){ gy[j], gx[j], 0, 0, 0, j > 0 };
+                            }
                             usleep(800000);
                         } else dead = 1;
                     }
