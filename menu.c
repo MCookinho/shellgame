@@ -158,7 +158,7 @@ static void set_colors(void) {
 
 static void settings_menu(void) {
     int sel = 0, ch, exit_settings = 0;
-    int lang_opts = 0, theme_opts = 0, speed_opts = 0, hints_opts = 0;
+    int lang_opts = 0, theme_opts = 0;
 
     while (!exit_settings) {
         erase();
@@ -193,30 +193,6 @@ static void settings_menu(void) {
             my++;
         }
 
-        my++;
-        mvaddstr(my, mx, _("Speed:", "Velocidade:"));
-        my++;
-        const char *speeds[] = {_("Normal", "Normal"), _("Fast", "Rapido")};
-        for (int i = 0; i < 2; i++) {
-            if (speed_opts == i && sel == 2) attron(A_REVERSE);
-            mvaddstr(my, mx + 4, speeds[i]);
-            if (cfg_speed == i) mvaddstr(my, mx + 16, _(" (current)", " (atual)"));
-            if (speed_opts == i && sel == 2) attroff(A_REVERSE);
-            my++;
-        }
-
-        my++;
-        mvaddstr(my, mx, _("Hints:", "Dicas:"));
-        my++;
-        const char *hints_opt[] = {_("Show", "Mostrar"), _("Hide", "Ocultar")};
-        for (int i = 0; i < 2; i++) {
-            if (hints_opts == i && sel == 3) attron(A_REVERSE);
-            mvaddstr(my, mx + 4, hints_opt[i]);
-            if (cfg_hints == (i == 0 ? 1 : 0)) mvaddstr(my, mx + 16, _(" (current)", " (atual)"));
-            if (hints_opts == i && sel == 3) attroff(A_REVERSE);
-            my++;
-        }
-
         my += 2;
         attron(COLOR_PAIR(2) | A_DIM);
         mvaddstr(my, mx, _("UP/DOWN: navigate | LEFT/RIGHT: change | ESC: back",
@@ -227,9 +203,7 @@ static void settings_menu(void) {
         ch = getch();
         if (ch == 27) { write_config(); exit_settings = 1; }
         if (ch == KEY_UP && sel > 0) sel--;
-        if (ch == KEY_DOWN && sel < 3) sel++;
-        speed_opts = cfg_speed;
-        hints_opts = cfg_hints ? 0 : 1;
+        if (ch == KEY_DOWN && sel < 1) sel++;
         if (ch == KEY_LEFT || ch == KEY_RIGHT) {
             if (sel == 0) {
                 if (ch == KEY_RIGHT && lang_opts < 1) lang_opts++;
@@ -239,19 +213,10 @@ static void settings_menu(void) {
                 if (ch == KEY_RIGHT && theme_opts < 2) theme_opts++;
                 if (ch == KEY_LEFT && theme_opts > 0) theme_opts--;
             }
-            if (sel == 2) {
-                if (ch == KEY_RIGHT && speed_opts < 1) speed_opts++;
-                if (ch == KEY_LEFT && speed_opts > 0) speed_opts--;
-            }
-            if (sel == 3) {
-                if (ch == KEY_RIGHT && hints_opts < 1) hints_opts++;
-                if (ch == KEY_LEFT && hints_opts > 0) hints_opts--;
-            }
             cfg_lang = (lang_opts == 0) ? LANG_EN : LANG_PT;
             cfg_theme = (theme_opts == 0) ? THEME_DARK : (theme_opts == 1) ? THEME_LIGHT : THEME_RETRO;
-            cfg_speed = speed_opts;
-            cfg_hints = hints_opts == 0 ? 1 : 0;
             refresh_lang();
+            // Re-init colors
             erase();
             start_color();
             set_colors();
@@ -286,11 +251,11 @@ int main(void) {
                 attron(A_REVERSE);
                 mvaddstr(my + i, x, "  ");
                 mvaddstr(my + i, x + 2, games[i]);
-                if (cfg_hints) mvaddstr(my + i, x + 20, desc[i]);
+                mvaddstr(my + i, x + 20, desc[i]);
                 attroff(A_REVERSE);
             } else {
                 mvaddstr(my + i, x + 2, games[i]);
-                if (cfg_hints) mvaddstr(my + i, x + 20, desc[i]);
+                mvaddstr(my + i, x + 20, desc[i]);
             }
         }
         // Separator line
@@ -303,22 +268,20 @@ int main(void) {
             attron(A_REVERSE);
             mvaddstr(si, x, "  ");
             mvaddstr(si, x + 2, games[TOTAL - 1]);
-            if (cfg_hints) mvaddstr(si, x + 20, desc[TOTAL - 1]);
+            mvaddstr(si, x + 20, desc[TOTAL - 1]);
             attroff(A_REVERSE);
         } else {
             attron(COLOR_PAIR(5) | A_DIM);
             mvaddstr(si, x + 2, games[TOTAL - 1]);
-            if (cfg_hints) mvaddstr(si, x + 20, desc[TOTAL - 1]);
+            mvaddstr(si, x + 20, desc[TOTAL - 1]);
             attroff(COLOR_PAIR(5) | A_DIM);
         }
 
-        if (cfg_hints) {
-            attron(COLOR_PAIR(2) | A_DIM);
-            mvaddstr(si + 2, COLS / 2 - 18,
-                     _("Arrows: navigate | Enter: play | Q: quit",
-                       "Setas: navegar | Enter: jogar | Q: sair"));
-            attroff(COLOR_PAIR(2) | A_DIM);
-        }
+        attron(COLOR_PAIR(2) | A_DIM);
+        mvaddstr(si + 2, COLS / 2 - 18,
+                 _("Arrows: navigate | Enter: play | Q: quit",
+                   "Setas: navegar | Enter: jogar | Q: sair"));
+        attroff(COLOR_PAIR(2) | A_DIM);
 
         refresh();
         ch = getch();
