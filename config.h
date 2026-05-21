@@ -19,6 +19,8 @@ typedef enum { THEME_DARK, THEME_LIGHT, THEME_RETRO } Theme;
 
 static Lang cfg_lang = LANG_EN;
 static Theme cfg_theme = THEME_DARK;
+static int cfg_speed = 0;
+static int cfg_hints = 1;
 
 static const char *cfg_path(void) {
     static char path[512];
@@ -44,6 +46,12 @@ static void read_config(void) {
             else if (!strcmp(line + 6, "retro")) cfg_theme = THEME_RETRO;
             else cfg_theme = THEME_DARK;
         }
+        if (!strncmp(line, "speed=", 6)) {
+            cfg_speed = !strcmp(line + 6, "fast") ? 1 : 0;
+        }
+        if (!strncmp(line, "hints=", 6)) {
+            cfg_hints = !strcmp(line + 6, "hide") ? 0 : 1;
+        }
     }
     fclose(f);
 }
@@ -57,6 +65,8 @@ static __attribute__((unused)) void write_config(void) {
     if (!f) return;
     fprintf(f, "lang=%s\n", cfg_lang == LANG_PT ? "pt" : "en");
     fprintf(f, "theme=%s\n", cfg_theme == THEME_DARK ? "dark" : cfg_theme == THEME_LIGHT ? "light" : "retro");
+    fprintf(f, "speed=%s\n", cfg_speed ? "fast" : "normal");
+    fprintf(f, "hints=%s\n", cfg_hints ? "show" : "hide");
     fclose(f);
 }
 
