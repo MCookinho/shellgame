@@ -194,16 +194,25 @@ static void settings_menu(void) {
         }
 
         my += 2;
+        attron(COLOR_PAIR(4) | A_DIM);
+        mvaddstr(my, mx, _("--- Other ---", "--- Outros ---"));
+        attroff(COLOR_PAIR(4) | A_DIM);
+        my += 2;
+        if (sel == 2) attron(A_REVERSE);
+        mvaddstr(my, mx + 4, _("Report issues", "Reportar problemas"));
+        if (sel == 2) attroff(A_REVERSE);
+
+        my += 2;
         attron(COLOR_PAIR(2) | A_DIM);
-        mvaddstr(my, mx, _("UP/DOWN: navigate | LEFT/RIGHT: change | ESC: back",
-                           "UP/DOWN: navegar | LEFT/RIGHT: alterar | ESC: voltar"));
+        mvaddstr(my, mx, _("UP/DOWN: navigate | LEFT/RIGHT: change | Enter: action | ESC: back",
+                           "UP/DOWN: navegar | LEFT/RIGHT: alterar | Enter: acao | ESC: voltar"));
         attroff(COLOR_PAIR(2) | A_DIM);
 
         refresh();
         ch = getch();
         if (ch == 27) { write_config(); exit_settings = 1; }
         if (ch == KEY_UP && sel > 0) sel--;
-        if (ch == KEY_DOWN && sel < 1) sel++;
+        if (ch == KEY_DOWN && sel < 2) sel++;
         if (ch == KEY_LEFT || ch == KEY_RIGHT) {
             if (sel == 0) {
                 if (ch == KEY_RIGHT && lang_opts < 1) lang_opts++;
@@ -218,6 +227,30 @@ static void settings_menu(void) {
             refresh_lang();
             // Re-init colors
             erase();
+            start_color();
+            set_colors();
+        }
+        if ((ch == '\n' || ch == ' ') && sel == 2) {
+            endwin();
+            const char *url = "https://github.com/MCookinho/shellgame/issues";
+            if (system("which xdg-open >/dev/null 2>&1") == 0) {
+                char cmd[512];
+                snprintf(cmd, sizeof(cmd), "xdg-open '%s'", url);
+                system(cmd);
+            } else if (system("which sensible-browser >/dev/null 2>&1") == 0) {
+                char cmd[512];
+                snprintf(cmd, sizeof(cmd), "sensible-browser '%s'", url);
+                system(cmd);
+            } else {
+                char cmd[512];
+                snprintf(cmd, sizeof(cmd), "firefox '%s'", url);
+                system(cmd);
+            }
+            initscr();
+            cbreak();
+            noecho();
+            curs_set(0);
+            keypad(stdscr, TRUE);
             start_color();
             set_colors();
         }
