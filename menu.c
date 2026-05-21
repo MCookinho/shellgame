@@ -193,11 +193,9 @@ static void settings_menu(void) {
             my++;
         }
 
-        my += 2;
-        attron(COLOR_PAIR(4) | A_DIM);
-        mvaddstr(my, mx, _("--- Other ---", "--- Outros ---"));
-        attroff(COLOR_PAIR(4) | A_DIM);
-        my += 2;
+        my++;
+        mvaddstr(my, mx, _("Other:", "Outros:"));
+        my++;
         if (sel == 2) attron(A_REVERSE);
         mvaddstr(my, mx + 4, _("Report issues", "Reportar problemas"));
         if (sel == 2) attroff(A_REVERSE);

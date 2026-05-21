@@ -67,7 +67,7 @@ static void update(void) {
     for (int i = 0; i < MAX_ENEMIES; i++) {
         if (!enemies[i].active) continue;
         if (enemies[i].y >= ROAD_H - 3 && enemies[i].y <= ROAD_H - 2 &&
-            enemies[i].x < player_x + 3 && enemies[i].x + 3 > player_x) {
+            abs(enemies[i].x - player_x) <= 1) {
             over = 1;
             return;
         }
